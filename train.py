@@ -12,6 +12,7 @@ from sklearn import datasets, svm, metrics
 from sklearn.externals import joblib
 from PIL import Image
 import sys
+import os
 
 
 # In[7]:
@@ -49,28 +50,19 @@ for index, (image, prediction) in enumerate(images_and_predictions[:4]):
     plt.axis('off')
     plt.imshow(image, cmap=plt.cm.gray_r, interpolation='nearest')
     plt.title('Prediction: %i' % prediction)
-
-
-
 # In[24]:
 
-
-if len(sys.argv) != 2:
-    print("Incorrect number of arguments, add a BMP file as cmd line argument.n")
-    sys.exit()
-custom_IM = Image.open(sys.argv[1])
-custom_pixels = list(custom_IM.getdata())
-corr_pixels = []
-for row in custom_pixels:
-    new_row = 255 - row[0]
-    corr_pixels.append(new_row)
-if len(corr_pixels) != 784:
-    print("Incorrect Image Dimensions (needs to be 784)n")
-    sys.exit()
-test_set = np.array(corr_pixels)
-
-classifier = joblib.load("../classifier/kaggle_digit_recognizer.pkl")
-predicted = classifier.predict(test_set)
-print(predicted)
+def pre():
+	custom_IM = Image.open(os.path.join('output.png'))
+	custom_pixels = list(custom_IM.getdata())
+	print("dsd")
+	corr_pixels = []
+	for row in custom_pixels:
+		new_row = 255 - row[0]
+		corr_pixels.append(new_row)
+	test_set = np.array(corr_pixels)
+	test_set.resize((1,64))
+	predicted = classifier.predict(test_set)
+	return predicted
 
 
